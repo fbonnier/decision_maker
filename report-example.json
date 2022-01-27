@@ -1,0 +1,35 @@
+# Report Example
+# The report represents the differences between a list of couples of files.
+
+[
+  {"result1":{
+          "name":"test-file.txt",
+          "path":"",
+          "size":"1000",
+          "type":"file",
+        },
+    "result2":{
+            "name":"test-file.txt",
+            "path":"",
+            "size":"1000",
+            "type":"file",},
+    "method":"",
+    "score":"",
+    "differences":{},
+  },
+  {"result1":{
+          "name":"analogsignals",
+          "path":"",
+          "size":"1000",
+          "type":"neo-analogsignals",
+        },
+    "result2":{
+            "name":"analogsignals",
+            "path":"",
+            "size":"1000",
+            "type":"neo-analogsignals",},
+    "method":"",
+    "score":"",
+    "differences":{},
+  },
+]
