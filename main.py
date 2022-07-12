@@ -10,8 +10,18 @@ import argparse
 import json
 
 def get_average_score (list_of_scores):
-    assert len(list_of_scores) > 0, "List empty"
+    assert len(list_of_scores) > 0, "List of scores empty"
     return sum(list_of_scores)/len(list_of_scores)
+
+def get_delta_max (list_of_differences):
+    list_of_deltas = []
+    for icouple in list_of_differences:
+        list_of_deltas.append(get_delta_max_1_file([float(icouple[ikey]) for ikey in icouple]))
+
+    return list_of_deltas
+
+def get_delta_max_1_file (list_of_deltas):
+    return max (list_of_deltas)
 
 
 if __name__ == "__main__":
@@ -28,10 +38,22 @@ if __name__ == "__main__":
         report_data = json.load(report_file)
 
         # 2: Build the list of scores
-        total_number_of_data = report_data[0]
-        print (total_number_of_data)
+        total_number_of_data = len(report_data)
         # print (report_data[1]["score"])
-        print ([report_data[idx]["score"] for idx in range(1, len(report_data))])
+        print ("Scores: " + str([item["score"] for item in report_data]))
+
+        list_of_scores = [float(item["score"]) for item in report_data]
+
+        average_score = get_average_score (list_of_scores)
+        print ("Average Score: " + str(average_score))
+
+        list_of_differences = [item["differences"] for item in report_data]
+        print (list_of_differences)
+
+        list_of_delta_max = get_delta_max (list_of_differences)
+        print ("Delta Max: " + str(list_of_delta_max))
+
+
         # list_of_scores = [report_data[idx]["score"] for idx in range(1, len(report_data))]
         # print (list_of_scores)
         # for idata in report_data:
