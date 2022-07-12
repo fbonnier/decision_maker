@@ -1,32 +1,39 @@
-[ 255,
-  {"result1":{
+[ {"result1":{
           "name":"test-file.txt",
           "path":"",
-          "size":"1000",
+          "size":1000,
           "type":"file"
         },
     "result2":{
             "name":"test-file.txt",
             "path":"",
-            "size":"1000",
+            "size":1000,
             "type":"file"},
     "method":"",
-    "score":"98",
-    "differences":{}
+    "score":98,
+    "differences":{ "pose": 1.2,
+                    "prose": 3.14,
+                    "pause": 0.0001,
+                    "phose": 8,
+                    "pnose": 7541}
   },
   {"result1":{
           "name":"analogsignals",
           "path":"",
-          "size":"1000",
+          "size":1000,
           "type":"neo-analogsignals"
         },
     "result2":{
             "name":"analogsignals",
             "path":"",
-            "size":"1000",
+            "size":1000,
             "type":"neo-analogsignals"},
     "method":"",
-    "score":"44",
-    "differences":{}
+    "score":44,
+    "differences":{"pose": 5.2138,
+                    "prose": 144978,
+                    "pause": 0.0000001,
+                    "phose": 879,
+                    "pnose": 7541}
   }
 ]
