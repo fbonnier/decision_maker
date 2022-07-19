@@ -11,11 +11,11 @@
             "type":"file"},
     "method":"",
     "score":98,
-    "differences":{ "pose": 1.2,
-                    "prose": 3.14,
-                    "pause": 0.0001,
-                    "phose": 8,
-                    "pnose": 7541}
+    "differences":{ "pose": {"value": 1.2, "type": "levenshtein"},
+                    "prose": {"value": 3.14, "type": "levenshtein"},
+                    "pause": {"value": 0.0001, "type": "arithmetic"},
+                    "phose": {"value": 8, "type": "arithmetic"},
+                    "pnose": {"value": 7541, "type": "arithmetic"}}
   },
   {"result1":{
           "name":"analogsignals",
@@ -30,10 +30,10 @@
             "type":"neo-analogsignals"},
     "method":"",
     "score":44,
-    "differences":{"pose": 5.2138,
-                    "prose": 144978,
-                    "pause": 0.0000001,
-                    "phose": 879,
-                    "pnose": 7541}
+    "differences":{"pose": {"value": 5.2138, "type": "levenshtein"},
+                    "prose": {"value": 144978, "type": "arithmetic"},
+                    "pause": {"value": 0.0000001, "type": "arithmetic"},
+                    "phose": {"value": 879, "type": "arithmetic"},
+                    "pnose": {"value": 7541, "type": "arithmetic"}}
   }
 ]

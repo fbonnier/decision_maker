@@ -8,6 +8,24 @@
 import os
 import argparse
 import json
+from Levenshtein import distance as lev
+
+# class Delta:
+#     distance = 0.
+#     difference_method = ""
+#
+#     def __init__ (self, value1, value2):
+#         try:
+#             # Arithmetic distance for arithmetic types
+#             self.distance = abs(value1 - value2)
+#             self.difference_method = "arithmetic"
+#         except:
+#             try:
+#                 # Levenshtein distance for strings
+#                 self.distance = lev(value1, value2)
+#                 self.difference_method = "levenshtein"
+#             except Exception as e:
+#                 print ("Delta computation: " + str(e))
 
 def get_average_score (list_of_scores):
     assert len(list_of_scores) > 0, "List of scores empty"
@@ -48,10 +66,18 @@ if __name__ == "__main__":
         print ("Average Score: " + str(average_score))
 
         list_of_differences = [item["differences"] for item in report_data]
-        print (list_of_differences)
+        print ("Differences: " + str(list_of_differences))
 
-        list_of_delta_max = get_delta_max (list_of_differences)
-        print ("Delta Max: " + str(list_of_delta_max))
+        list_of_delta = []
+        for idiff in list_of_differences:
+            print ("idiff: " + str(idiff))
+            # list_of_delta.append(list_of_differences[idiff])
+        print ("Deltas: " + str(list_of_delta))
+
+
+
+        # list_of_delta_max = get_delta_max (list_of_differences)
+        # print ("Delta Max: " + str(list_of_delta_max))
 
 
         # list_of_scores = [report_data[idx]["score"] for idx in range(1, len(report_data))]
