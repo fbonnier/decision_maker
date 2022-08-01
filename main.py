@@ -8,24 +8,7 @@
 import os
 import argparse
 import json
-from Levenshtein import distance as lev
-
-# class Delta:
-#     distance = 0.
-#     difference_method = ""
-#
-#     def __init__ (self, value1, value2):
-#         try:
-#             # Arithmetic distance for arithmetic types
-#             self.distance = abs(value1 - value2)
-#             self.difference_method = "arithmetic"
-#         except:
-#             try:
-#                 # Levenshtein distance for strings
-#                 self.distance = lev(value1, value2)
-#                 self.difference_method = "levenshtein"
-#             except Exception as e:
-#                 print ("Delta computation: " + str(e))
+import statistics
 
 def get_average_score (list_of_scores):
     assert len(list_of_scores) > 0, "List of scores empty"
@@ -40,6 +23,14 @@ def get_delta_max (list_of_differences):
 
 def get_delta_max_1_file (list_of_deltas):
     return max (list_of_deltas)
+
+def get_delta_array_per_type (report_data):
+    to_return = {"arithmetic": [], "levenshtein": []}
+    for icouple in report_data:
+        for item in icouple["differences"]:
+            to_return[icouple["differences"][item]["type"]].append(icouple["differences"][item]["value"])
+
+    return to_return
 
 
 if __name__ == "__main__":
@@ -58,21 +49,62 @@ if __name__ == "__main__":
         # 2: Build the list of scores
         total_number_of_data = len(report_data)
         # print (report_data[1]["score"])
-        print ("Scores: " + str([item["score"] for item in report_data]))
+        # print ("Scores: " + str([item["score"] for item in report_data]))
+        # list_of_scores = [float(item["score"]) for item in report_data]
 
-        list_of_scores = [float(item["score"]) for item in report_data]
+        # 3: Build list of delta sorted by type (arithmetic, levenshtein distance)
+        delta_per_type = get_delta_array_per_type (report_data)
+        # print (delta_per_type)
 
-        average_score = get_average_score (list_of_scores)
-        print ("Average Score: " + str(average_score))
+        # 4-1: Arithmetic Statistics
+        print ("===============================\n# Arithmetic\n===============================")
+        print ("# Min value = " + str (min(delta_per_type["arithmetic"])))
+        print ("# Max value = " + str (max(delta_per_type["arithmetic"])))
+        print ("# Harmonic mean = " + str (statistics.harmonic_mean(delta_per_type["arithmetic"])))
+        print ("# Mean (Average) = " + str (statistics.mean(delta_per_type["arithmetic"])))
+        print ("# Median = " + str (statistics.median(delta_per_type["arithmetic"])))
+        print ("# Median Low = " + str (statistics.median_low(delta_per_type["arithmetic"])))
+        print ("# Median High = " + str (statistics.median_high(delta_per_type["arithmetic"])))
+        print ("# Mode = " + str (statistics.mode(delta_per_type["arithmetic"])))
+        print ("# Standard Deviation Population = " + str (statistics.pstdev(delta_per_type["arithmetic"])))
+        print ("# Standard Deviation = " + str (statistics.stdev(delta_per_type["arithmetic"])))
+        print ("# Population Variance = " + str (statistics.pvariance(delta_per_type["arithmetic"])))
+        print ("# Variance = " + str (statistics.variance(delta_per_type["arithmetic"])))
+        print ("===============================\n")
 
-        list_of_differences = [item["differences"] for item in report_data]
-        print ("Differences: " + str(list_of_differences))
+        # 4-2: Levenshtein Statistics
+        print ("===============================\n# Levenshtein\n===============================")
+        print ("# Min value = " + str (min(delta_per_type["levenshtein"])))
+        print ("# Max value = " + str (max(delta_per_type["levenshtein"])))
+        print ("# Harmonic mean = " + str (statistics.harmonic_mean(delta_per_type["levenshtein"])))
+        print ("# Mean (Average) = " + str (statistics.mean(delta_per_type["levenshtein"])))
+        print ("# Median = " + str (statistics.median(delta_per_type["levenshtein"])))
+        print ("# Median Low = " + str (statistics.median_low(delta_per_type["levenshtein"])))
+        print ("# Median High = " + str (statistics.median_high(delta_per_type["levenshtein"])))
+        print ("# Mode = " + str (statistics.mode(delta_per_type["levenshtein"])))
+        print ("# Standard Deviation Population = " + str (statistics.pstdev(delta_per_type["levenshtein"])))
+        print ("# Standard Deviation = " + str (statistics.stdev(delta_per_type["levenshtein"])))
+        print ("# Population Variance = " + str (statistics.pvariance(delta_per_type["levenshtein"])))
+        print ("# Variance = " + str (statistics.variance(delta_per_type["levenshtein"])))
+        print ("===============================\n")
 
-        list_of_delta = []
-        for idiff in list_of_differences:
-            print ("idiff: " + str(idiff))
-            # list_of_delta.append(list_of_differences[idiff])
-        print ("Deltas: " + str(list_of_delta))
+        # 4-3: Key errors, missing data
+        print ("===============================\n# Missing data\n===============================")
+        print ("# Number of missing values = " + str (delta_per_type["missing"]))
+        print ("===============================\n")
+
+
+        # average_score = get_average_score (list_of_scores)
+        # print ("Average Score: " + str(average_score))
+        #
+        # list_of_differences = [item["differences"] for item in report_data]
+        # print ("Differences: " + str(list_of_differences))
+        #
+        # list_of_delta = []
+        # for idiff in list_of_differences:
+        #     print ("idiff: " + str(idiff))
+        #     # list_of_delta.append(list_of_differences[idiff])
+        # print ("Deltas: " + str(list_of_delta))
 
 
 
