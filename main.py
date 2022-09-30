@@ -9,6 +9,7 @@ import os
 import argparse
 import json
 import statistics
+import emoji
 
 def get_average_score (list_of_scores):
     assert len(list_of_scores) > 0, "List of scores empty"
@@ -89,9 +90,30 @@ if __name__ == "__main__":
         print ("===============================\n")
 
         # 4-3: Key errors, missing data
-        print ("===============================\n# Missing data\n===============================")
-        print ("# Number of missing values = " + str (delta_per_type["missing"]))
+        # print ("===============================\n# Missing data\n===============================")
+        # print ("# Number of missing values = " + str (len(report_data["missing"])))
+        # print ("===============================\n")
+
+        # 4-4: Machine precision
+        print ("===============================\n# Machine precision\n===============================")
+        print ("!!WARNING!!: Only arithmetic values can be compared to machine precision. \U0001F595")
+        print ("# Numpy.EPS = " + str(numpy.finfo(float).eps) + "\n")
+        for ivalue in delta_per_type["arithmetic"]:
+            if ivalue > numpy.finfo(float).eps:
+                print (str(ivalue)  + " :: Value too far from machine precision")
+        print ("\n")
         print ("===============================\n")
+
+        # 4-4: Raised Errors
+        # print ("===============================\n# Raised Errors\n===============================")
+        # print ("# Number of errors = " + str(len(report_data["errors"])) + "\n")
+        # print (report_data["errors"])
+        # print ("\n")
+        # print ("===============================\n")
+
+        # 4.5: Is there a documentation ?
+        # print ("===============================\n# README\n===============================")
+
 
 
         # average_score = get_average_score (list_of_scores)

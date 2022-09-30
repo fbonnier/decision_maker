@@ -15,7 +15,9 @@
                     "prose": {"value": 3.14, "type": "levenshtein"},
                     "pause": {"value": 0.0001, "type": "arithmetic"},
                     "phose": {"value": 8, "type": "arithmetic"},
-                    "pnose": {"value": 7541, "type": "arithmetic"}}
+                    "pnose": {"value": 7541, "type": "arithmetic"}},
+    "missing": [],
+    "errors": []
   },
   {"result1":{
           "name":"analogsignals",
@@ -34,6 +36,8 @@
                     "prose": {"value": 144978, "type": "arithmetic"},
                     "pause": {"value": 0.0000001, "type": "arithmetic"},
                     "phose": {"value": 879, "type": "arithmetic"},
-                    "pnose": {"value": 7541, "type": "arithmetic"}}
+                    "pnose": {"value": 7541, "type": "arithmetic"}},
+    "missing": [],
+    "errors": []
   }
 ]
