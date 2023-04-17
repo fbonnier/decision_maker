@@ -37,107 +37,138 @@ def get_delta_array_per_type (report_data):
 if __name__ == "__main__":
 
     # 0: the report file is given as an entry
-    parser = argparse.ArgumentParser(description='Computes file comparison using ')
-    parser.add_argument('file', type=argparse.FileType('r'), metavar='file', nargs=1,
-                        help='Report File to analyze')
+    parser = argparse.ArgumentParser(description='Gathers scores and proposes quality from verification methods reports ')
+    parser.add_argument('report_list', type=argparse.FileType('r'), metavar='report_list', nargs="+", help='Report Files list to analyze')
     args = parser.parse_args()
 
+    # List of all method reports available
+    report_list = args.report_list
+    
+    # Logs to report issues and warnings
+    log = []
 
-    # 1: Open the JSON report containing differences and scores of two list of files
-    with open (args.file[0].name, 'r') as report_file:
-        report_data = json.load(report_file)
+    # Method's names
+    methods = ["Reusability Verification"]
 
-        # 2: Build the list of scores
-        total_number_of_data = len(report_data)
-        # print (report_data[1]["score"])
-        # print ("Scores: " + str([item["score"] for item in report_data]))
-        # list_of_scores = [float(item["score"]) for item in report_data]
+    # Check if there is one or more report to analyze
+    if len(report_list) < 1:
+        log.append ("Decision Error: No verification report")
 
-        # 3: Build list of delta sorted by type (arithmetic, levenshtein distance)
-        delta_per_type = get_delta_array_per_type (report_data)
-        # print (delta_per_type)
+    # Open and get info from each report file
+    for ireport in report_list:
+        
+        try:
+            with open (ireport.name, 'r') as report_file:
+                report_data = json.load (report_file)
 
-        # 4-1: Arithmetic Statistics
-        print ("===============================\n# Arithmetic\n===============================")
-        print ("# Min value = " + str (min(delta_per_type["arithmetic"])))
-        print ("# Max value = " + str (max(delta_per_type["arithmetic"])))
-        print ("# Harmonic mean = " + str (statistics.harmonic_mean(delta_per_type["arithmetic"])))
-        print ("# Mean (Average) = " + str (statistics.mean(delta_per_type["arithmetic"])))
-        print ("# Median = " + str (statistics.median(delta_per_type["arithmetic"])))
-        print ("# Median Low = " + str (statistics.median_low(delta_per_type["arithmetic"])))
-        print ("# Median High = " + str (statistics.median_high(delta_per_type["arithmetic"])))
-        print ("# Mode = " + str (statistics.mode(delta_per_type["arithmetic"])))
-        print ("# Standard Deviation Population = " + str (statistics.pstdev(delta_per_type["arithmetic"])))
-        print ("# Standard Deviation = " + str (statistics.stdev(delta_per_type["arithmetic"])))
-        print ("# Population Variance = " + str (statistics.pvariance(delta_per_type["arithmetic"])))
-        print ("# Variance = " + str (statistics.variance(delta_per_type["arithmetic"])))
-        print ("===============================\n")
+                # Try each method
+                for imethod in methods:
 
-        # 4-2: Levenshtein Statistics
-        print ("===============================\n# Levenshtein\n===============================")
-        print ("# Min value = " + str (min(delta_per_type["levenshtein"])))
-        print ("# Max value = " + str (max(delta_per_type["levenshtein"])))
-        print ("# Harmonic mean = " + str (statistics.harmonic_mean(delta_per_type["levenshtein"])))
-        print ("# Mean (Average) = " + str (statistics.mean(delta_per_type["levenshtein"])))
-        print ("# Median = " + str (statistics.median(delta_per_type["levenshtein"])))
-        print ("# Median Low = " + str (statistics.median_low(delta_per_type["levenshtein"])))
-        print ("# Median High = " + str (statistics.median_high(delta_per_type["levenshtein"])))
-        print ("# Mode = " + str (statistics.mode(delta_per_type["levenshtein"])))
-        print ("# Standard Deviation Population = " + str (statistics.pstdev(delta_per_type["levenshtein"])))
-        print ("# Standard Deviation = " + str (statistics.stdev(delta_per_type["levenshtein"])))
-        print ("# Population Variance = " + str (statistics.pvariance(delta_per_type["levenshtein"])))
-        print ("# Variance = " + str (statistics.variance(delta_per_type["levenshtein"])))
-        print ("===============================\n")
+                    try:
+                        block = report_data[imethod]
 
-        # 4-3: Key errors, missing data
-        # print ("===============================\n# Missing data\n===============================")
-        # print ("# Number of missing values = " + str (len(report_data["missing"])))
-        # print ("===============================\n")
+                    except Exception as emethod:
+                        log.append (ireport.name + ": " + str(emethod))
 
-        # 4-4: Machine precision
-        print ("===============================\n# Machine precision\n===============================")
-        print ("!!WARNING!!: Only arithmetic values can be compared to machine precision. \U0001F595")
-        print ("# Numpy.EPS = " + str(numpy.finfo(float).eps) + "\n")
-        for ivalue in delta_per_type["arithmetic"]:
-            if ivalue > numpy.finfo(float).eps:
-                print (str(ivalue)  + " :: Value too far from machine precision")
-        print ("\n")
-        print ("===============================\n")
-
-        # 4-4: Raised Errors
-        # print ("===============================\n# Raised Errors\n===============================")
-        # print ("# Number of errors = " + str(len(report_data["errors"])) + "\n")
-        # print (report_data["errors"])
-        # print ("\n")
-        # print ("===============================\n")
-
-        # 4.5: Is there a documentation ?
-        # print ("===============================\n# README\n===============================")
+        except Exception as e:
+            log.append (ireport.name + ": " + str(e))
 
 
+    # # 1: Open the JSON report containing differences and scores of two list of files
+    # with open (args.file[0].name, 'r') as report_file:
+    #     report_data = json.load(report_file)
 
-        # average_score = get_average_score (list_of_scores)
-        # print ("Average Score: " + str(average_score))
-        #
-        # list_of_differences = [item["differences"] for item in report_data]
-        # print ("Differences: " + str(list_of_differences))
-        #
-        # list_of_delta = []
-        # for idiff in list_of_differences:
-        #     print ("idiff: " + str(idiff))
-        #     # list_of_delta.append(list_of_differences[idiff])
-        # print ("Deltas: " + str(list_of_delta))
+    #     # 2: Build the list of scores
+    #     total_number_of_data = len(report_data)
+    #     # print (report_data[1]["score"])
+    #     # print ("Scores: " + str([item["score"] for item in report_data]))
+    #     # list_of_scores = [float(item["score"]) for item in report_data]
+
+    #     # 3: Build list of delta sorted by type (arithmetic, levenshtein distance)
+    #     delta_per_type = get_delta_array_per_type (report_data)
+    #     # print (delta_per_type)
+
+    #     # 4-1: Arithmetic Statistics
+    #     print ("===============================\n# Arithmetic\n===============================")
+    #     print ("# Min value = " + str (min(delta_per_type["arithmetic"])))
+    #     print ("# Max value = " + str (max(delta_per_type["arithmetic"])))
+    #     print ("# Harmonic mean = " + str (statistics.harmonic_mean(delta_per_type["arithmetic"])))
+    #     print ("# Mean (Average) = " + str (statistics.mean(delta_per_type["arithmetic"])))
+    #     print ("# Median = " + str (statistics.median(delta_per_type["arithmetic"])))
+    #     print ("# Median Low = " + str (statistics.median_low(delta_per_type["arithmetic"])))
+    #     print ("# Median High = " + str (statistics.median_high(delta_per_type["arithmetic"])))
+    #     print ("# Mode = " + str (statistics.mode(delta_per_type["arithmetic"])))
+    #     print ("# Standard Deviation Population = " + str (statistics.pstdev(delta_per_type["arithmetic"])))
+    #     print ("# Standard Deviation = " + str (statistics.stdev(delta_per_type["arithmetic"])))
+    #     print ("# Population Variance = " + str (statistics.pvariance(delta_per_type["arithmetic"])))
+    #     print ("# Variance = " + str (statistics.variance(delta_per_type["arithmetic"])))
+    #     print ("===============================\n")
+
+    #     # 4-2: Levenshtein Statistics
+    #     print ("===============================\n# Levenshtein\n===============================")
+    #     print ("# Min value = " + str (min(delta_per_type["levenshtein"])))
+    #     print ("# Max value = " + str (max(delta_per_type["levenshtein"])))
+    #     print ("# Harmonic mean = " + str (statistics.harmonic_mean(delta_per_type["levenshtein"])))
+    #     print ("# Mean (Average) = " + str (statistics.mean(delta_per_type["levenshtein"])))
+    #     print ("# Median = " + str (statistics.median(delta_per_type["levenshtein"])))
+    #     print ("# Median Low = " + str (statistics.median_low(delta_per_type["levenshtein"])))
+    #     print ("# Median High = " + str (statistics.median_high(delta_per_type["levenshtein"])))
+    #     print ("# Mode = " + str (statistics.mode(delta_per_type["levenshtein"])))
+    #     print ("# Standard Deviation Population = " + str (statistics.pstdev(delta_per_type["levenshtein"])))
+    #     print ("# Standard Deviation = " + str (statistics.stdev(delta_per_type["levenshtein"])))
+    #     print ("# Population Variance = " + str (statistics.pvariance(delta_per_type["levenshtein"])))
+    #     print ("# Variance = " + str (statistics.variance(delta_per_type["levenshtein"])))
+    #     print ("===============================\n")
+
+    #     # 4-3: Key errors, missing data
+    #     # print ("===============================\n# Missing data\n===============================")
+    #     # print ("# Number of missing values = " + str (len(report_data["missing"])))
+    #     # print ("===============================\n")
+
+    #     # 4-4: Machine precision
+    #     print ("===============================\n# Machine precision\n===============================")
+    #     print ("!!WARNING!!: Only arithmetic values can be compared to machine precision. \U0001F595")
+    #     print ("# Numpy.EPS = " + str(numpy.finfo(float).eps) + "\n")
+    #     for ivalue in delta_per_type["arithmetic"]:
+    #         if ivalue > numpy.finfo(float).eps:
+    #             print (str(ivalue)  + " :: Value too far from machine precision")
+    #     print ("\n")
+    #     print ("===============================\n")
+
+    #     # 4-4: Raised Errors
+    #     # print ("===============================\n# Raised Errors\n===============================")
+    #     # print ("# Number of errors = " + str(len(report_data["errors"])) + "\n")
+    #     # print (report_data["errors"])
+    #     # print ("\n")
+    #     # print ("===============================\n")
+
+    #     # 4.5: Is there a documentation ?
+    #     # print ("===============================\n# README\n===============================")
 
 
 
-        # list_of_delta_max = get_delta_max (list_of_differences)
-        # print ("Delta Max: " + str(list_of_delta_max))
+    #     # average_score = get_average_score (list_of_scores)
+    #     # print ("Average Score: " + str(average_score))
+    #     #
+    #     # list_of_differences = [item["differences"] for item in report_data]
+    #     # print ("Differences: " + str(list_of_differences))
+    #     #
+    #     # list_of_delta = []
+    #     # for idiff in list_of_differences:
+    #     #     print ("idiff: " + str(idiff))
+    #     #     # list_of_delta.append(list_of_differences[idiff])
+    #     # print ("Deltas: " + str(list_of_delta))
 
 
-        # list_of_scores = [report_data[idx]["score"] for idx in range(1, len(report_data))]
-        # print (list_of_scores)
-        # for idata in report_data:
-        #     print (idata)
+
+    #     # list_of_delta_max = get_delta_max (list_of_differences)
+    #     # print ("Delta Max: " + str(list_of_delta_max))
+
+
+    #     # list_of_scores = [report_data[idx]["score"] for idx in range(1, len(report_data))]
+    #     # print (list_of_scores)
+    #     # for idata in report_data:
+    #     #     print (idata)
 
 
     exit (0)
