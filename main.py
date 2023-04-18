@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
     # 0: the report file is given as an entry
     parser = argparse.ArgumentParser(description='Gathers scores and proposes quality from verification methods reports ')
-    parser.add_argument("--json", type=argparse.FileType('r'), metavar='report_list', nargs="+", help='Report Files list to analyze')
+    parser.add_argument("--json", type=argparse.FileType('r'), metavar='report_list', dest="report_list", nargs="+", help='Report Files list to analyze')
     args = parser.parse_args()
 
     # List of all method reports available
