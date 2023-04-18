@@ -47,6 +47,9 @@ if __name__ == "__main__":
     # Logs to report issues and warnings
     log = []
 
+    # Blocks storing all method's report blocks
+    blocks = []
+
     # Method's names
     methods = ["Reusability Verification"]
 
@@ -65,13 +68,17 @@ if __name__ == "__main__":
                 for imethod in methods:
 
                     try:
-                        block = report_data[imethod]
+                        blocks.append (report_data[imethod])
 
                     except Exception as emethod:
                         log.append (ireport.name + ": " + str(emethod))
 
         except Exception as e:
             log.append (ireport.name + ": " + str(e))
+    
+    print ("Blocks:")
+    print (blocks, sep="\n\n")
+    print ("Log: " + str(log))
 
 
     # # 1: Open the JSON report containing differences and scores of two list of files
