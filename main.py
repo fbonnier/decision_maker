@@ -11,6 +11,11 @@ import json
 import statistics
 import emoji
 
+error_types = {
+    "Missing data": 
+        ["- Ensure the run instruction is correct", "- Ensure the inputs data are the expected ones", "- Did the simulation crashed ?", "- Are we comparing the right data/files ?"]
+    }
+
 def get_average_score (list_of_scores):
     assert len(list_of_scores) > 0, "List of scores empty"
     return sum(list_of_scores)/len(list_of_scores)
@@ -33,6 +38,30 @@ def get_delta_array_per_type (report_data):
 
     return to_return
 
+def compute_final_scores_1method (method_block:dict):
+
+    # Mean Hash Score
+    method_block["mean hash score"] = sum([ipair["hash score"] for ipair in method_block["files"]])/len(method_block["files"])
+
+    scores = [\
+                method_block["mean hash score"],\
+                method_block["mape"],\
+                method_block["mpse"],\
+                method_block["rmpse"]\
+                ]
+    
+    method_block["score"] = (sum(scores))/len(scores)
+
+    # Propose advices according the errors and the score of the method
+    method_block["advices"] = []
+    
+    # array size errors
+    if "size" in method_block["errors"]:
+        method_block["advices"].append (error_types["Missing data"])
+
+
+
+    return method_block
 
 if __name__ == "__main__":
 
@@ -48,7 +77,7 @@ if __name__ == "__main__":
     log = []
 
     # Blocks storing all method's report blocks
-    blocks = []
+    blocks = {}
 
     # Method's names
     methods = ["Reusability Verification"]
@@ -68,13 +97,19 @@ if __name__ == "__main__":
                 for imethod in methods:
 
                     try:
-                        blocks.append (report_data[imethod])
+                        blocks[imethod] = compute_final_scores_1method(report_data[imethod])
 
                     except Exception as emethod:
                         log.append (ireport.name + ": " + str(emethod))
 
         except Exception as e:
             log.append (ireport.name + ": " + str(e))
+
+    try:
+        with open ("./score_report.json", 'w') as score_file:
+            json.dump(blocks, score_file, indent=4)
+    except Exception as e:
+        print (e)
     
     print ("Blocks:")
     print (blocks, sep="\n\n")
