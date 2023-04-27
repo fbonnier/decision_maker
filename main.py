@@ -42,12 +42,12 @@ def compute_final_scores_1method (method_block:dict):
 
     # Mean Hash Score
     method_block["mean hash score"] = sum([ipair["hash score"] for ipair in method_block["files"]])/len(method_block["files"])
-
+    method_block["mape"] = sum([ipair["mape_score"] for ipair in method_block["files"]])/len(method_block["files"])
     scores = [\
                 method_block["mean hash score"],\
                 method_block["mape"],\
-                method_block["mpse"],\
-                method_block["rmpse"]\
+                # method_block["mpse"],\
+                # method_block["rmpse"]\
                 ]
     
     method_block["score"] = (sum(scores))/len(scores)
@@ -56,7 +56,7 @@ def compute_final_scores_1method (method_block:dict):
     method_block["advices"] = []
     
     # array size errors
-    if "size" in method_block["errors"]:
+    if method_block["error"] and "size" in method_block["error"]:
         method_block["advices"].append (error_types["Missing data"])
 
 
@@ -111,8 +111,8 @@ if __name__ == "__main__":
     except Exception as e:
         print (e)
     
-    print ("Blocks:")
-    print (blocks, sep="\n\n")
+    # print ("Blocks:")
+    # print (blocks, sep="\n\n")
     print ("Log: " + str(log))
 
 
