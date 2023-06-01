@@ -9,7 +9,6 @@ import os
 import argparse
 import json
 import statistics
-import emoji
 
 error_types = {
     "Missing data": 
