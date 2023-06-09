@@ -9,6 +9,9 @@ import os
 import argparse
 import json
 import statistics
+from interval import interval, inf
+
+decisions = {"Red": interval([0, 50]), "Orange": interval([50, 70]), "Yellow": interval([70, 80]), "Green": interval([80, 100])}
 
 error_types = {
     "Missing data": 
@@ -37,49 +40,75 @@ def get_delta_array_per_type (report_data):
 
     return to_return
 
-def compute_final_scores_1method (method_block:dict):
+def compute_final_scores_1method (decision_block:dict, method_block:dict):
 
-    # Mean Hash Score
-    method_block["mean hash score"] = sum([ipair["hash score"] for ipair in method_block["files"]])/len(method_block["files"])
-    method_block["mape"] = sum([ipair["mape_score"] for ipair in method_block["files"]])/len(method_block["files"])
-    scores = [\
-                method_block["mean hash score"],\
-                method_block["mape"],\
-                # method_block["mpse"],\
-                # method_block["rmpse"]\
-                ]
+    # Add Method's score to final score
+    decision_block["score"] += method_block[0]["score"]
+
+    # Add Method's report to final report
+    decision_block["report"].append (method_block[0]["report"])
+
+    # Add Method's logs to final log
+    decision_block["logs"].append (method_block[0]["log"])
+
+    # Add Method's errors to final errors
+    decision_block["errors"].append (method_block[0]["error"])
+
+    # Add Method's advices to final advices
+    decision_block["advices"].append (method_block[0]["advice"])
+
+
+    # # Mean Hash Score
+    # method_block["mean hash score"] = sum([ipair["hash score"] for ipair in method_block["files"]])/len(method_block["files"])
+    # method_block["mape"] = sum([ipair["mape_score"] for ipair in method_block["files"]])/len(method_block["files"])
+    # scores = [\
+    #             method_block["mean hash score"],\
+    #             method_block["mape"],\
+    #             # method_block["mpse"],\
+    #             # method_block["rmpse"]\
+    #             ]
     
-    method_block["score"] = (sum(scores))/len(scores)
+    # method_block["score"] = (sum(scores))/len(scores)
 
-    # Propose advices according the errors and the score of the method
-    method_block["advices"] = []
+    # # Propose advices according the errors and the score of the method
+    # method_block["advices"] = []
     
-    # array size errors
-    if method_block["error"] and "size" in method_block["error"]:
-        method_block["advices"].append (error_types["Missing data"])
+    # # array size errors
+    # if method_block["error"] and "size" in method_block["error"]:
+    #     method_block["advices"].append (error_types["Missing data"])
 
-
-
-    return method_block
+    return decision_block
 
 if __name__ == "__main__":
 
     # 0: the report file is given as an entry
     parser = argparse.ArgumentParser(description='Gathers scores and proposes quality from verification methods reports ')
     parser.add_argument("--json", type=argparse.FileType('r'), metavar='report_list', dest="report_list", nargs="+", help='Report Files list to analyze')
+    parser.add_argument('--out', type=argparse.FileType('w'), metavar='out', nargs=1, help='JSON File containing final decision and final report')
+
     args = parser.parse_args()
 
     # List of all method reports available
     report_list = args.report_list
+    print ("List of reports : ")
+    print (report_list)
+
+    # Output file containing final decision, final score, advices, errors et all report blocks of verification methods
+    output_report = args.out[0]
     
     # Logs to report issues and warnings
     log = []
 
-    # Blocks storing all method's report blocks
-    blocks = {}
+    # Block storing all method's report blocks and final score
+    decision_block = {"score": 0.,
+              "logs": [],
+              "errors": [],
+              "report": [],
+              "advices": [],
+              "decision": None}
 
     # Method's names
-    methods = ["Reusability Verification"]
+    # methods = ["Reusability Verification"]
 
     # Check if there is one or more report to analyze
     if len(report_list) < 1:
@@ -93,20 +122,24 @@ if __name__ == "__main__":
                 report_data = json.load (report_file)
 
                 # Try each method
-                for imethod in methods:
+                # for imethod in methods:
 
-                    try:
-                        blocks[imethod] = compute_final_scores_1method(report_data[imethod])
+                try:
+                    decision_block = compute_final_scores_1method(decision_block, report_data)
 
-                    except Exception as emethod:
-                        log.append (ireport.name + ": " + str(emethod))
+                except Exception as emethod:
+                    log.append (ireport.name + ": " + str(emethod))
+                    print (emethod)
 
         except Exception as e:
             log.append (ireport.name + ": " + str(e))
 
+    # Calculate final score
+    decision_block["score"] = decision_block["score"]/len(report_list)
+
     try:
-        with open ("./score_report.json", 'w') as score_file:
-            json.dump(blocks, score_file, indent=4)
+        with open (output_report.name, 'w') as score_file:
+            json.dump(decision_block, score_file, indent=4)
     except Exception as e:
         print (e)
     
