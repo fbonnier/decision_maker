@@ -17,6 +17,12 @@ for (( iarg=1; iarg<=NARGS; iarg++)); do
             RUN_INSTR="$RUN_INSTR ${!jarg}"
         done
 
+    elif [ ${!iarg} == "--out" ]; then
+        RUN_INSTR="$RUN_INSTR --out"
+        jarg=$((iarg+1))
+        echo ${!jarg}
+        RUN_INSTR="$RUN_INSTR ${!jarg}"
+
     fi
 done
 
