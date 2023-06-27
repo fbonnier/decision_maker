@@ -45,11 +45,6 @@ def compute_final_scores_1method (decision_block:dict, method_block:dict):
 
     for ikey in method_block.keys():
 
-        print (type(method_block[ikey]))
-        print ("\n")
-        print (method_block[ikey])
-        print ("\n")
-
         # Add Method's score to final score
         decision_block["score"] += method_block[ikey]["score"]
 
