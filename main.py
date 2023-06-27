@@ -42,24 +42,28 @@ def get_delta_array_per_type (report_data):
 
 def compute_final_scores_1method (decision_block:dict, method_block:dict):
 
-    print (type(list(method_block)[0]))
-    print ("\n")
-    print (list(method_block)[0])
-    print ("\n")
-    # Add Method's score to final score
-    decision_block["score"] += list(method_block)[0]["score"]
 
-    # Add Method's report to final report
-    decision_block["report"].append (list(method_block)[0]["report"])
+    for ikey in method_block.keys():
 
-    # Add Method's logs to final log
-    decision_block["logs"].append (list(method_block)[0]["log"])
+        print (type(method_block[ikey]))
+        print ("\n")
+        print (method_block[ikey])
+        print ("\n")
 
-    # Add Method's errors to final errors
-    decision_block["errors"].append (list(method_block)[0]["error"])
+        # Add Method's score to final score
+        decision_block["score"] += method_block[ikey]["score"]
 
-    # Add Method's advices to final advices
-    decision_block["advices"].append (list(method_block)[0]["advice"])
+        # Add Method's report to final report
+        decision_block["report"].append (method_block[ikey]["report"])
+
+        # Add Method's logs to final log
+        decision_block["logs"].append (method_block[ikey]["log"])
+
+        # Add Method's errors to final errors
+        decision_block["errors"].append (method_block[ikey]["error"])
+
+        # Add Method's advices to final advices
+        decision_block["advices"].append (method_block[ikey]["advice"])
 
 
     # # Mean Hash Score
