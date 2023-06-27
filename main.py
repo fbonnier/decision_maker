@@ -63,7 +63,7 @@ def compute_final_scores_1method (decision_block:dict, method_block:dict):
         decision_block["errors"].append (method_block[ikey]["error"])
 
         # Add Method's advices to final advices
-        decision_block["advices"].append (method_block[ikey]["advice"])
+        # decision_block["advices"].append (method_block[ikey]["advice"])
 
 
     # # Mean Hash Score
