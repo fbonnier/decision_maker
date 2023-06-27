@@ -42,6 +42,10 @@ def get_delta_array_per_type (report_data):
 
 def compute_final_scores_1method (decision_block:dict, method_block:dict):
 
+    print (type(list(method_block)[0]))
+    print ("\n")
+    print (list(method_block)[0])
+    print ("\n")
     # Add Method's score to final score
     decision_block["score"] += list(method_block)[0]["score"]
 
