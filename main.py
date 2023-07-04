@@ -49,13 +49,13 @@ def compute_final_scores_1method (decision_block:dict, method_block:dict):
         decision_block["score"] += method_block[ikey]["score"]
 
         # Add Method's report to final report
-        decision_block["report"].append (method_block[ikey]["report"])
+        decision_block["report"].append ({ikey: method_block[ikey]["report"]})
 
         # Add Method's logs to final log
-        decision_block["logs"].append (method_block[ikey]["log"])
+        decision_block["logs"] += method_block[ikey]["log"]
 
         # Add Method's errors to final errors
-        decision_block["errors"].append (method_block[ikey]["error"])
+        decision_block["errors"] += method_block[ikey]["error"]
 
         # Add Method's advices to final advices
         # decision_block["advices"].append (method_block[ikey]["advice"])
