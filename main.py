@@ -44,12 +44,12 @@ def compute_final_scores_1method (decision_block:dict, method_block:dict):
 
 
     for ikey in method_block.keys():
-
+        print ("Key " + str(ikey))
         # Add Method's score to final score
         decision_block["score"] += method_block[ikey]["score"]
 
         # Add Method's report to final report
-        decision_block["report"].append ({ikey: method_block[ikey]["report"]})
+        decision_block["report"][ikey]= method_block[ikey]["report"]
 
         # Add Method's logs to final log
         decision_block["logs"] += method_block[ikey]["log"]
@@ -58,8 +58,9 @@ def compute_final_scores_1method (decision_block:dict, method_block:dict):
         decision_block["errors"] += method_block[ikey]["error"]
 
         # Add Method's advices to final advices
-        # decision_block["advices"].append (method_block[ikey]["advice"])
+        decision_block["advices"].append (method_block[ikey]["advice"])
 
+    
 
     # # Mean Hash Score
     # method_block["mean hash score"] = sum([ipair["hash score"] for ipair in method_block["files"]])/len(method_block["files"])
@@ -106,7 +107,7 @@ if __name__ == "__main__":
     decision_block = {"score": 0.,
               "logs": [],
               "errors": [],
-              "report": [],
+              "report": {},
               "advices": [],
               "decision": None}
 
