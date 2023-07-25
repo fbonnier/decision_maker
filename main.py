@@ -58,7 +58,7 @@ def compute_final_scores_1method (decision_block:dict, method_block:dict):
         decision_block["errors"] += method_block[ikey]["error"]
 
         # Add Method's advices to final advices
-        decision_block["advices"].append (method_block[ikey]["advice"])
+        decision_block["advices"] += method_block[ikey]["advice"]
 
     
 
@@ -116,30 +116,32 @@ if __name__ == "__main__":
 
     # Check if there is one or more report to analyze
     if len(report_list) < 1:
-        log.append ("Decision Error: No verification report")
+        decision_block["logs"].append ("Decision Error: No verification report")
+        decision_block["errors"].append ("Decision Error: No verification report")
+        decision_block["score"] = None
+    else:
+        # Open and get info from each report file
+        for ireport in report_list:
+            
+            try:
+                with open (ireport.name, 'r') as report_file:
+                    report_data = json.load (report_file)
 
-    # Open and get info from each report file
-    for ireport in report_list:
-        
-        try:
-            with open (ireport.name, 'r') as report_file:
-                report_data = json.load (report_file)
+                    # Try each method
+                    # for imethod in methods:
 
-                # Try each method
-                # for imethod in methods:
+                    try:
+                        decision_block = compute_final_scores_1method(decision_block, report_data)
 
-                try:
-                    decision_block = compute_final_scores_1method(decision_block, report_data)
+                    except Exception as emethod:
+                        decision_block["logs"].append (ireport.name + ": " + str(emethod))
+                        print (emethod)
 
-                except Exception as emethod:
-                    log.append (ireport.name + ": " + str(emethod))
-                    print (emethod)
+            except Exception as e:
+                decision_block["logs"].append (ireport.name + ": " + str(e))
 
-        except Exception as e:
-            log.append (ireport.name + ": " + str(e))
-
-    # Calculate final score
-    decision_block["score"] = decision_block["score"]/len(report_list)
+        # Calculate final score
+        decision_block["score"] = decision_block["score"]/len(report_list)
 
     try:
         with open (output_report.name, 'w') as score_file:
@@ -149,7 +151,7 @@ if __name__ == "__main__":
     
     # print ("Blocks:")
     # print (blocks, sep="\n\n")
-    print ("Log: " + str(log))
+    print ("Log: " + decision_block["logs"])
 
 
     # # 1: Open the JSON report containing differences and scores of two list of files
