@@ -53,13 +53,13 @@ def compute_final_scores_1method (decision_block:dict, method_block:dict):
         decision_block["report"][ikey]= method_block[ikey]["report"]
 
         # Add Method's logs to final log
-        decision_block["logs"] += method_block[ikey]["log"]
+        decision_block["log"] += method_block[ikey]["log"]
 
         # Add Method's errors to final errors
-        decision_block["errors"] += method_block[ikey]["error"]
+        decision_block["error"] += method_block[ikey]["error"]
 
         # Add Method's advices to final advices
-        decision_block["advices"] += method_block[ikey]["advice"]
+        decision_block["advice"] += method_block[ikey]["advice"]
 
     
 
@@ -106,10 +106,10 @@ if __name__ == "__main__":
 
     # Block storing all method's report blocks and final score
     decision_block = {"score": 0.,
-              "logs": [],
-              "errors": [],
+              "log": [],
+              "error": [],
               "report": {},
-              "advices": [],
+              "advice": [],
               "decision": None}
 
     # Method's names
@@ -117,8 +117,8 @@ if __name__ == "__main__":
 
     # Check if there is one or more report to analyze
     if len(report_list) < 1:
-        decision_block["logs"].append ("Decision Error: No verification report")
-        decision_block["errors"].append ("Decision Error: No verification report")
+        decision_block["log"].append ("Decision Error: No verification report")
+        decision_block["error"].append ("Decision Error: No verification report")
         decision_block["score"] = None
     else:
         # Open and get info from each report file
@@ -135,11 +135,11 @@ if __name__ == "__main__":
                         decision_block = compute_final_scores_1method(decision_block, report_data)
 
                     except Exception as e:
-                        decision_block["logs"].append (str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
+                        decision_block["log"].append (str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
                         print (str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
 
             except Exception as e:
-                decision_block["logs"].append (str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
+                decision_block["log"].append (str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
 
         # Calculate final score
         decision_block["score"] = decision_block["score"]/len(report_list)
@@ -152,7 +152,7 @@ if __name__ == "__main__":
     
     # print ("Blocks:")
     # print (blocks, sep="\n\n")
-    print ("Log: " + str(decision_block["logs"]))
+    print ("Log: " + str(decision_block["log"]))
 
 
     # # 1: Open the JSON report containing differences and scores of two list of files
