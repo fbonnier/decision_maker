@@ -10,6 +10,7 @@ import argparse
 import json
 import statistics
 from interval import interval, inf
+import traceback
 
 decisions = {"Red": interval([0, 50]), "Orange": interval([50, 70]), "Yellow": interval([70, 80]), "Green": interval([80, 100])}
 
@@ -133,12 +134,12 @@ if __name__ == "__main__":
                     try:
                         decision_block = compute_final_scores_1method(decision_block, report_data)
 
-                    except Exception as emethod:
-                        decision_block["logs"].append (ireport.name + ": " + str(emethod))
-                        print (emethod)
+                    except Exception as e:
+                        decision_block["logs"].append (str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
+                        print (str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
 
             except Exception as e:
-                decision_block["logs"].append (ireport.name + ": " + str(e))
+                decision_block["logs"].append (str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
 
         # Calculate final score
         decision_block["score"] = decision_block["score"]/len(report_list)
@@ -147,7 +148,7 @@ if __name__ == "__main__":
         with open (output_report.name, 'w') as score_file:
             json.dump(decision_block, score_file, indent=4)
     except Exception as e:
-        print (e)
+        print (str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
     
     # print ("Blocks:")
     # print (blocks, sep="\n\n")
