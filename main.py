@@ -151,7 +151,7 @@ if __name__ == "__main__":
     
     # print ("Blocks:")
     # print (blocks, sep="\n\n")
-    print ("Log: " + decision_block["logs"])
+    print ("Log: " + str(decision_block["logs"]))
 
 
     # # 1: Open the JSON report containing differences and scores of two list of files
