@@ -150,10 +150,6 @@ if __name__ == "__main__":
     except Exception as e:
         print (str("".join(traceback.format_exception(etype=type(e), value=e, tb=e.__traceback__))))
     
-    # print ("Blocks:")
-    # print (blocks, sep="\n\n")
-    print ("Log: " + str(decision_block["log"]))
-
 
     # # 1: Open the JSON report containing differences and scores of two list of files
     # with open (args.file[0].name, 'r') as report_file:
